@@ -5,6 +5,12 @@ resource "aws_apigatewayv2_api" "this" {
   disable_execute_api_endpoint = local.custom_domain
 }
 
+resource "aws_apigatewayv2_stage" "default" {
+  api_id      = aws_apigatewayv2_api.this.id
+  name        = "$default"
+  auto_deploy = true
+}
+
 module "default_route" {
   source = "./modules/api_gateway_route"
 
