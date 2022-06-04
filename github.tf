@@ -12,7 +12,7 @@ resource "github_repository_webhook" "relay" {
   repository = each.key
 
   configuration {
-    url          = "${local.api_endpoint}/${var.github_owner}/${each.key}"
+    url          = "${local.api_endpoint}/webhook/${var.github_owner}/${each.key}"
     content_type = "json"
     secret       = local.webhook_secret
     insecure_ssl = false
