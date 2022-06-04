@@ -79,7 +79,7 @@ exports.handler = async (event, context) => {
                     deliveries_url: `https://api.github.com/repos/${element.repo.S}/hooks/${element.id.N}/deliveries`,
                     last_response: {
                         code: null,
-                        status: "missing",
+                        status: "unused",
                         message: null
                     }
                 });
