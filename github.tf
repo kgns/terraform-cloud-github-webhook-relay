@@ -1,9 +1,3 @@
-data "github_repository" "repo" {
-  for_each = toset(var.github_repositories)
-
-  full_name = "${var.github_owner}/${each.key}"
-}
-
 resource "random_password" "secret" {
   count = var.custom_webhook_secret == "" ? 1 : 0
 
@@ -13,12 +7,12 @@ resource "random_password" "secret" {
 }
 
 resource "github_repository_webhook" "relay" {
-  for_each = data.github_repository.repo
+  for_each = toset(var.github_repositories)
 
-  repository = each.value.full_name
+  repository = each.key
 
   configuration {
-    url          = "${local.api_endpoint}/${each.value.full_name}"
+    url          = "${local.api_endpoint}/${var.github_owner}/${each.key}"
     content_type = "json"
     secret       = local.webhook_secret
     insecure_ssl = false

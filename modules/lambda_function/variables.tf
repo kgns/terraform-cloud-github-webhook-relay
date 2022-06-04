@@ -16,5 +16,5 @@ variable "dynamodb_permission" {
 
 variable "environment_variables" {
   type    = map(string)
-  default = {}
+  default = null
 }
