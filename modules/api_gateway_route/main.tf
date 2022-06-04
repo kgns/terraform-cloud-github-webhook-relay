@@ -9,7 +9,7 @@ resource "aws_apigatewayv2_integration" "this" {
   api_id           = var.api_id
   integration_type = var.type
 
-  integration_method     = "ANY"
+  integration_method     = var.method
   payload_format_version = var.payload_version
   integration_uri        = var.uri
 }

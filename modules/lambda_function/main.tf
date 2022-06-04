@@ -26,8 +26,11 @@ resource "aws_lambda_function" "this" {
   memory_size      = 128
   timeout          = 30
 
-  environment {
-    variables = var.environment_variables
+  dynamic "environment" {
+    for_each = var.environment_variables[*]
+    content {
+      variables = environment.value
+    }
   }
 
   depends_on = [aws_cloudwatch_log_group.this]

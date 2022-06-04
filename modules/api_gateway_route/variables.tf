@@ -3,11 +3,17 @@ variable "api_id" {
 }
 
 variable "route_key" {
-  type = string
+  type    = string
+}
+
+variable "method" {
+  type    = string
+  default = "POST"
 }
 
 variable "type" {
-  type = string
+  type    = string
+  default = "AWS_PROXY"
 }
 
 variable "uri" {
@@ -15,5 +21,6 @@ variable "uri" {
 }
 
 variable "payload_version" {
-  type = string
+  type    = string
+  default = "1.0"
 }

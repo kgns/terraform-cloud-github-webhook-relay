@@ -10,6 +10,7 @@ module "default_route" {
 
   api_id          = aws_apigatewayv2_api.this.id
   route_key       = "$default"
+  method          = "ANY"
   type            = "HTTP_PROXY"
   uri             = "https://api.github.com"
   payload_version = null
@@ -18,31 +19,25 @@ module "default_route" {
 module "hooks_get_route" {
   source = "./modules/api_gateway_route"
 
-  api_id          = aws_apigatewayv2_api.this.id
-  route_key       = "GET /repos/{user}/{repo}/hooks"
-  type            = "AWS_PROXY"
-  uri             = module.get_hooks_lambda.invoke_arn
-  payload_version = "1.0"
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "GET /repos/{user}/{repo}/hooks"
+  uri       = module.get_hooks_lambda.invoke_arn
 }
 
 module "hooks_post_route" {
   source = "./modules/api_gateway_route"
 
-  api_id          = aws_apigatewayv2_api.this.id
-  route_key       = "POST /repos/{user}/{repo}/hooks"
-  type            = "AWS_PROXY"
-  uri             = module.post_hooks_lambda.invoke_arn
-  payload_version = "1.0"
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "POST /repos/{user}/{repo}/hooks"
+  uri       = module.post_hooks_lambda.invoke_arn
 }
 
 module "hooks_delete_route" {
   source = "./modules/api_gateway_route"
 
-  api_id          = aws_apigatewayv2_api.this.id
-  route_key       = "DELETE /repos/{user}/{repo}/hooks/{id}"
-  type            = "AWS_PROXY"
-  uri             = module.delete_hooks_lambda.invoke_arn
-  payload_version = "1.0"
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "DELETE /repos/{user}/{repo}/hooks/{id}"
+  uri       = module.delete_hooks_lambda.invoke_arn
 }
 
 module "github_webhook_route" {
@@ -50,7 +45,6 @@ module "github_webhook_route" {
 
   api_id          = aws_apigatewayv2_api.this.id
   route_key       = "POST /webhook/{user}/{repo}"
-  type            = "AWS_PROXY"
   uri             = module.webhook_relay_lambda.invoke_arn
   payload_version = "2.0"
 }
