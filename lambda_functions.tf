@@ -32,5 +32,5 @@ module "webhook_relay_lambda" {
   dynamodb_permission       = "Query"
   dynamodb_table_arn        = aws_dynamodb_table.tf_webhooks.arn
   api_gateway_execution_arn = aws_apigatewayv2_api.this.execution_arn
-  environment_variables     = {GITHUB_WEBHOOK_SECRET = local.webhook_secret}
+  environment_variables     = { GITHUB_WEBHOOK_SECRET = local.webhook_secret }
 }

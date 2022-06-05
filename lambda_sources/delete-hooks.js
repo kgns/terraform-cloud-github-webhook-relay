@@ -1,8 +1,8 @@
 // Load the AWS SDK for Node.js
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 
 // Create DynamoDB service object
-const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
 
 
 exports.handler = async (event, context) => {
@@ -11,10 +11,10 @@ exports.handler = async (event, context) => {
     let hookId = event.pathParameters.id;
 
     let params = {
-        TableName: 'tf_webhooks',
+        TableName: "tf_webhooks",
         Key: {
-            'repo' : {S: `${user}/${repo}`},
-            'id' : {N: hookId}
+            "repo" : {S: `${user}/${repo}`},
+            "id" : {N: hookId}
         }
     };
 
@@ -26,7 +26,9 @@ exports.handler = async (event, context) => {
         const data = await ddb.deleteItem(params).promise();
     } catch (err) {
         console.log("Error", err);
-        responseBody = `Could not delete webhook: ${err}`;
+        responseBody = JSON.stringify({
+            "error": `Could not delete webhook: ${err}`
+        }, null, 2);
         statusCode = 500;
     }
 

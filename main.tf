@@ -19,11 +19,11 @@ terraform {
       version = "~> 4.0"
     }
     archive = {
-      source = "hashicorp/archive"
+      source  = "hashicorp/archive"
       version = "~> 2.2.0"
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "~> 3.2.0"
     }
   }
@@ -40,7 +40,7 @@ provider "github" {
 data "aws_caller_identity" "current" {}
 
 locals {
-  custom_domain = var.custom_domain_name != "" && var.hosted_zone_id != "" ? true : false
+  custom_domain  = var.custom_domain_name != "" && var.hosted_zone_id != "" ? true : false
   webhook_secret = var.custom_webhook_secret != "" ? var.custom_webhook_secret : random_password.secret[0].result
-  api_endpoint = local.custom_domain ? "https://${var.custom_domain_name}" : aws_apigatewayv2_api.this.api_endpoint
+  api_endpoint   = local.custom_domain ? "https://${var.custom_domain_name}" : aws_apigatewayv2_api.this.api_endpoint
 }

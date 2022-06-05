@@ -3,7 +3,7 @@ variable "api_id" {
 }
 
 variable "route_key" {
-  type    = string
+  type = string
 }
 
 variable "method" {
