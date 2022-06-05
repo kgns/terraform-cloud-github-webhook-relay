@@ -8,7 +8,7 @@ const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
 const target = "api.github.com";
 
 
-function asyncRequest(options, payload = null) {
+function asyncRequest(options, payload = "") {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let chunks = [];
@@ -22,9 +22,7 @@ function asyncRequest(options, payload = null) {
             });
         });
         req.on("error", reject);
-        if (payload) {
-            req.write(payload);
-        }
+        req.write(payload);
         req.end();
     });
 }

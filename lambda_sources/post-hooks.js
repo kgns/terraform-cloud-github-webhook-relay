@@ -8,7 +8,7 @@ const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
 const target = "api.github.com";
 
 
-function asyncRequest(options, payload = null) {
+function asyncRequest(options, payload = "") {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let chunks = [];
@@ -22,9 +22,7 @@ function asyncRequest(options, payload = null) {
             });
         });
         req.on("error", reject);
-        if (payload) {
-            req.write(payload);
-        }
+        req.write(payload);
         req.end();
     });
 }
@@ -54,12 +52,10 @@ exports.handler = async (event, context) => {
     if (response.statusCode == 201) {
         let hookId = JSON.parse(response.body).id.toString();
 
-        options.hostname = target;
         options.path = `${event.path}/${hookId}`;
         options.method = "DELETE";
-        options.headers.Host = target;
         // if successful, delete the newly created webhook from GitHub
-        let resp = await asyncRequest(options);
+        await asyncRequest(options);
 
         let body = JSON.parse(bodyStr);
         let params = {

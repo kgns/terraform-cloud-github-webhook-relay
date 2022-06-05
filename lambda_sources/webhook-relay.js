@@ -15,7 +15,7 @@ function signRequestBody256(key, body) {
     return `sha256=${crypto.createHmac("sha256", key).update(body, "utf-8").digest("hex")}`;
 }
 
-function asyncRequest(options, payload = null) {
+function asyncRequest(options, payload = "") {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let chunks = [];
@@ -29,9 +29,7 @@ function asyncRequest(options, payload = null) {
             });
         });
         req.on("error", reject);
-        if (payload) {
-            req.write(payload);
-        }
+        req.write(payload);
         req.end();
     });
 }
