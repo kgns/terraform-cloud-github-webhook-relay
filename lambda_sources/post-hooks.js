@@ -54,6 +54,7 @@ exports.handler = async (event, context) => {
 
         options.path = `${event.path}/${hookId}`;
         options.method = "DELETE";
+        delete options.headers["Content-Length"];
         // if successful, delete the newly created webhook from GitHub
         await asyncRequest(options);
 
