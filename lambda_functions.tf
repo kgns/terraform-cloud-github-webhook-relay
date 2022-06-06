@@ -5,6 +5,10 @@ module "post_hooks_lambda" {
   dynamodb_permission       = "PutItem"
   dynamodb_table_arn        = aws_dynamodb_table.tf_webhooks.arn
   api_gateway_execution_arn = aws_apigatewayv2_api.this.execution_arn
+  environment_variables = {
+    GITHUB_OWNER        = var.github_owner
+    GITHUB_REPOSITORIES = jsonencode(var.github_repositories)
+  }
 }
 
 module "get_hooks_lambda" {
@@ -14,6 +18,10 @@ module "get_hooks_lambda" {
   dynamodb_permission       = "Query"
   dynamodb_table_arn        = aws_dynamodb_table.tf_webhooks.arn
   api_gateway_execution_arn = aws_apigatewayv2_api.this.execution_arn
+  environment_variables = {
+    GITHUB_OWNER        = var.github_owner
+    GITHUB_REPOSITORIES = jsonencode(var.github_repositories)
+  }
 }
 
 module "delete_hooks_lambda" {
@@ -23,6 +31,10 @@ module "delete_hooks_lambda" {
   dynamodb_permission       = "DeleteItem"
   dynamodb_table_arn        = aws_dynamodb_table.tf_webhooks.arn
   api_gateway_execution_arn = aws_apigatewayv2_api.this.execution_arn
+  environment_variables = {
+    GITHUB_OWNER        = var.github_owner
+    GITHUB_REPOSITORIES = jsonencode(var.github_repositories)
+  }
 }
 
 module "webhook_relay_lambda" {
@@ -32,5 +44,9 @@ module "webhook_relay_lambda" {
   dynamodb_permission       = "Query"
   dynamodb_table_arn        = aws_dynamodb_table.tf_webhooks.arn
   api_gateway_execution_arn = aws_apigatewayv2_api.this.execution_arn
-  environment_variables     = { GITHUB_WEBHOOK_SECRET = local.webhook_secret }
+  environment_variables = {
+    GITHUB_WEBHOOK_SECRET = local.webhook_secret
+    GITHUB_OWNER          = var.github_owner
+    GITHUB_REPOSITORIES   = jsonencode(var.github_repositories)
+  }
 }

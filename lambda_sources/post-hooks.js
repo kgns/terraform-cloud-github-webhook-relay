@@ -4,6 +4,7 @@ const https = require("https");
 
 // Create DynamoDB service object
 const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
+const repositories = JSON.parse(process.env.GITHUB_REPOSITORIES);
 
 const target = "api.github.com";
 
@@ -49,7 +50,7 @@ exports.handler = async (event, context) => {
 
     // proxy request to GitHub to relay a proper response and generate a webhook id
     const response = await asyncRequest(options, bodyStr);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 && user == process.env.GITHUB_OWNER && repositories.includes(repo)) {
         let hookId = JSON.parse(response.body).id.toString();
 
         options.path = `${event.path}/${hookId}`;

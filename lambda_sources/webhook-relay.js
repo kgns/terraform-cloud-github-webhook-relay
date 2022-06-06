@@ -5,6 +5,7 @@ const crypto = require("crypto");
 
 // Create DynamoDB service object
 const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
+const repositories = JSON.parse(process.env.GITHUB_REPOSITORIES);
 
 
 function signRequestBody(key, body) {
@@ -37,6 +38,14 @@ function asyncRequest(options, payload = "") {
 exports.handler = async (event, context) => {
     let user = event.pathParameters.user;
     let repo = event.pathParameters.repo;
+
+    if (user != process.env.GITHUB_OWNER || !repositories.includes(repo)) {
+        return {
+            statusCode: 401,
+            headers: { "Content-Type": "text/plain" },
+            body: "Unsupported GitHub user/repository"
+        };
+    }
 
     // GitHub request signature check
     const token = process.env.GITHUB_WEBHOOK_SECRET;

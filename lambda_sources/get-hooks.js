@@ -4,6 +4,7 @@ const https = require("https");
 
 // Create DynamoDB service object
 const ddb = new AWS.DynamoDB({apiVersion: "2012-08-10"});
+const repositories = JSON.parse(process.env.GITHUB_REPOSITORIES);
 
 const target = "api.github.com";
 
@@ -44,7 +45,7 @@ exports.handler = async (event, context) => {
 
     // relay get request to GitHub to receive current webhooks list
     const response = await asyncRequest(options);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && user == process.env.GITHUB_OWNER && repositories.includes(repo)) {
         let responseBody = JSON.parse(response.body);
 
         // we should have our relaying webhook registered on GitHub at this stage
