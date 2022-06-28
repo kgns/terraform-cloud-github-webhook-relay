@@ -73,7 +73,7 @@ exports.handler = async (event, context) => {
     try {
         const data = await ddb.query(params).promise();
         // relay GitHub webhook payload to all terraform webhook endpoints
-        for (let element of data.Items) {
+        const results = await Promise.all(data.Items.map(element => {
             let url = new URL(element.url.S);
             const options = {
                 hostname: url.hostname,
@@ -85,9 +85,15 @@ exports.handler = async (event, context) => {
             options.headers.host = url.hostname;
             options.headers["x-hub-signature"] = signRequestBody(element.secret.S, event.body);
             options.headers["x-hub-signature-256"] = signRequestBody256(element.secret.S, event.body);
-            const response = await asyncRequest(options, event.body);
-            lastHeaders = response.headers;
-        }
+            return asyncRequest(options, event.body);
+        }));
+        lastHeaders = results.reduce((prev, curr) => {
+            if (prev.headers["x-ratelimit-remaining"] < curr.headers["x-ratelimit-remaining"]) {
+                return prev;
+            } else {
+                return curr;
+            }
+        }).headers;
     } catch (err) {
         console.log("Error", err);
         return {
